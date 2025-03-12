@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gold: #d4af37;
+  --light-gold: #f9b622;
+  --deep-orange: #bf8849;
+  --royal-brown: #984006;
+  --light-yellow: #f2be56;
+  --cream: #fff8e1;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-image: url('./background.jpg') !important; /* Mount Olympus heavenly theme */
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-color: var(--cream); /* Fallback color */
+  color: white;
+  overflow-x: visible;
+}
+
+/* 🌟 Remove previous dark overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: transparent; /* No dark overlay */
+  backdrop-filter: none;
+  z-index: -1;
+}
+
+/* 🌟 Soft Golden Blur Effect for Sections */
+.bg-heavenly {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 216, 140, 0.8) 0%,   /* Golden Glow */
+    rgba(255, 237, 189, 0.8) 50%,  /* Soft Yellow */
+    rgba(255, 248, 225, 0.9) 100%  /* Heavenly Cream */
+  );
+  backdrop-filter: blur(15px); /* Soft ethereal glow */
+  box-shadow: 0 0 20px rgba(255, 237, 189, 0.5);
+  transition: all 0.3s ease-in-out;
+  border-radius: 12px;
+}
+
+/* 🌟 Glowing Text */
+.glowing-text {
+  text-shadow: 0 0 15px rgba(255, 237, 189, 0.9), 0 0 30px rgba(255, 216, 140, 0.6);
+}
+
+/* 🌟 Divine Glow Borders */
+.glowing-border {
+  box-shadow: 0 0 20px var(--gold);
+}
+
+/* ✨ Floating Divine Animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.float {
+  animation: float 5s ease-in-out infinite;
+}
+
+/* 🌟 Heavenly Hero Gradient */
+.hero-gradient {
+  background: linear-gradient(135deg, rgba(255, 216, 140, 0.8) 0%, rgba(255, 237, 189, 0.9) 100%);
+}
+
+/* 🌟 Glowing Hover Effect */
+.glowing-hover:hover {
+  box-shadow: 0 0 30px rgba(255, 216, 140, 0.6);
+  transition: all 0.3s ease-in-out;
+}
+
+/* ✨ Celestial Twinkling Stars */
+.star {
+  position: absolute;
+  background-color: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: twinkle 4s infinite;
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.2; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.2; }
+}
+
+/* ✨ Divine Pulse Effect */
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.pulse {
+  animation: pulse 3s infinite;
+}
+/* Apply the glowing gradient from PRANAV2K25 */
+.bottom-section {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 216, 140, 0.85) 0%,   /* Golden Glow */
+    rgba(255, 237, 189, 0.85) 50%,  /* Soft Yellow */
+    rgba(255, 248, 225, 0.92) 100%  /* Heavenly Cream */
+  );
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 30px rgba(255, 237, 189, 0.4);
+  border-radius: 12px;
+  padding: 3rem;
+  text-align: center;
+  color: #d4af37; /* Gold Text */
+  font-family: 'Cinzel', serif;
+}
