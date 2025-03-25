@@ -8,7 +8,7 @@ const Schedule: React.FC = () => {
 
   const scheduleData = [
     {
-      day: "Day 1",
+      day: "General Schedule",
       date: "March 15, 2025",
       events: [
         { time: "09:00 AM", title: "Opening Ceremony", location: "Zeus Hall" },
@@ -20,7 +20,7 @@ const Schedule: React.FC = () => {
       ]
     },
     {
-      day: "Day 2",
+      day: "Technical Events",
       date: "March 16, 2025",
       events: [
         { time: "09:00 AM", title: "Icarus Challenge Kickoff", location: "Daedalus Lab" },
@@ -32,7 +32,7 @@ const Schedule: React.FC = () => {
       ]
     },
     {
-      day: "Day 3",
+      day: "Non-Technical Events",
       date: "March 17, 2025",
       events: [
         { time: "09:00 AM", title: "Prometheus Tech Expo Opens", location: "Prometheus Hall" },
@@ -49,9 +49,7 @@ const Schedule: React.FC = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
+      transition: { staggerChildren: 0.2 }
     }
   };
 

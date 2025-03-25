@@ -120,3 +120,18 @@ body::before {
   color: #d4af37; /* Gold Text */
   font-family: 'Cinzel', serif;
 }
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-flow {
+  background-size: 300% 300%;
+  animation: gradientFlow 6s infinite linear;
+}
+
+.text-shadow-lg {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+

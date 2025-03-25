@@ -1,10 +1,12 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Flame, Mail, Phone, MapPin, Instagram, Twitter, Facebook, Linkedin } from 'lucide-react';
 
 const Footer: React.FC = () => {
+  const location = useLocation();
   const currentYear = new Date().getFullYear();
-  
+
   return (
     <footer className="bg-deep-blue/95 border-t border-gold/20 pt-16 pb-8">
       <div className="container mx-auto px-4">
@@ -71,36 +73,39 @@ const Footer: React.FC = () => {
               <li><a href="#register" className="text-gray-300 hover:text-light-blue transition-colors">Register</a></li>
             </motion.ul>
           </div>
-          
-          <div>
-            <motion.h3 
-              className="text-xl font-cinzel font-bold text-gold mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-            >
-              Contact Us
-            </motion.h3>
-            <motion.ul 
-              className="space-y-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-            >
-              <li className="flex items-start">
-                <Mail className="h-5 w-5 text-light-blue mr-3 mt-0.5" />
-                <span className="text-gray-300">info@pranav2k25.edu</span>
-              </li>
-              <li className="flex items-start">
-                <Phone className="h-5 w-5 text-light-blue mr-3 mt-0.5" />
-                <span className="text-gray-300">+91 9876543210</span>
-              </li>
-              <li className="flex items-start">
-                <MapPin className="h-5 w-5 text-light-blue mr-3 mt-0.5" />
-                <span className="text-gray-300">Apollo Campus, Olympus Building, Tech Park, Bangalore</span>
-              </li>
-            </motion.ul>
-          </div>
+
+          {/** ✅ Show "Contact Us" ONLY on the Home Page */}
+          {location.pathname === "/" && (
+            <div>
+              <motion.h3 
+                className="text-xl font-cinzel font-bold text-gold mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+              >
+                Contact Us
+              </motion.h3>
+              <motion.ul 
+                className="space-y-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                <li className="flex items-start">
+                  <Mail className="h-5 w-5 text-light-blue mr-3 mt-0.5" />
+                  <span className="text-gray-300">info@pranav2k25.edu</span>
+                </li>
+                <li className="flex items-start">
+                  <Phone className="h-5 w-5 text-light-blue mr-3 mt-0.5" />
+                  <span className="text-gray-300">+91 9876543210</span>
+                </li>
+                <li className="flex items-start">
+                  <MapPin className="h-5 w-5 text-light-blue mr-3 mt-0.5" />
+                  <span className="text-gray-300">Apollo Campus, Olympus Building, Tech Park, Bangalore</span>
+                </li>
+              </motion.ul>
+            </div>
+          )}
           
           <div>
             <motion.h3 

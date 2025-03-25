@@ -1,224 +1,163 @@
-import React, { useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { Check, ChevronDown } from 'lucide-react';
+import { useState } from "react";
 
-const Register: React.FC = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
-  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+// Define types
+interface FormDataType {
+  name: string;
+  email: string;
+  institution: string;
+}
 
-  const packages = [
-    {
-      id: "mortal",
-      name: "Mortal",
-      price: "₹499",
-      features: [
-        "Access to all keynote sessions",
-        "Participation in Olympian Debates",
-        "Symposium welcome kit",
-        "Digital certificate"
-      ],
-      recommended: false
-    },
-    {
-      id: "hero",
-      name: "Hero",
-      price: "₹999",
-      features: [
-        "All Mortal package benefits",
-        "Participation in Herculean Tasks",
-        "Access to Athena's Workshops",
-        "Lunch on all days",
-        "Exclusive PRANAV2K25 merchandise"
-      ],
-      recommended: true
-    },
-    {
-      id: "demigod",
-      name: "Demigod",
-      price: "₹1499",
-      features: [
-        "All Hero package benefits",
-        "VIP access to all events",
-        "Participation in Icarus Challenge",
-        "Gala dinner invitation",
-        "One-on-one session with speakers",
-        "Premium PRANAV2K25 merchandise"
-      ],
-      recommended: false
-    }
-  ];
+const institutions = [
+  { value: "athens", label: "🏛 Athens Academy" },
+  { value: "sparta", label: "⚔️ Spartan Tech Institute" },
+  { value: "delphi", label: "🔮 Oracle University" },
+  { value: "olympus", label: "⚡ Mount Olympus Institute" },
+  { value: "corinth", label: "🏺 Corinthian Scholars" },
+  { value: "argos", label: "🛡️ Argos Engineering Academy" },
+  { value: "trojan", label: "🐴 Trojan Tech Institute" },
+];
 
-  const faqs = [
-    {
-      question: "When and where will PRANAV2K25 take place?",
-      answer: "PRANAV2K25 will be held from March 15-17, 2025, at the Apollo Campus, Olympus Building, Tech Park, Bangalore."
-    },
-    {
-      question: "Is accommodation provided for participants?",
-      answer: "Accommodation is not included in the registration packages. However, we have partnered with nearby hotels to offer special discounts for participants. Details will be shared after registration."
-    },
-    {
-      question: "Can I register for specific events only?",
-      answer: "No, our packages are designed to provide a comprehensive experience. However, the Mortal package allows access to keynote sessions and select events if you're unable to attend the full symposium."
-    },
-    {
-      question: "Is there a refund policy?",
-      answer: "Yes, cancellations made 30 days before the event will receive a full refund minus processing fees. Cancellations within 30 days will receive a 50% refund. No refunds will be issued within 7 days of the event."
-    },
-    {
-      question: "Can teams participate in the Icarus Challenge?",
-      answer: "Yes, the Icarus Challenge is a team event. Teams of 2-4 members can participate, but each member must be registered individually (Hero or Demigod package)."
-    }
-  ];
+const SymposiumRegistration: React.FC = () => {
+  const [formData, setFormData] = useState<FormDataType>({
+    name: "",
+    email: "",
+    institution: "",
+  });
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleInstitutionSelect = (value: string) => {
+    setFormData((prev) => ({ ...prev, institution: value }));
+    setDropdownOpen(false);
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email || !formData.institution) {
+      alert("⚠️ Zeus commands you to complete all fields before proceeding!");
+      return;
     }
+    setSubmitted(true);
   };
+
+  if (submitted) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-black text-gold text-center p-6">
+        <img src="/zeus-lightning.gif" alt="Zeus Blessing" className="w-32 h-32 mb-6 animate-pulse" />
+        <h2 className="text-4xl font-extrabold text-amber-500">⚡ Congratulations, {formData.name}! ⚡</h2>
+        <p className="text-lg mt-4 italic text-gray-300">
+          Your name has been inscribed in the scrolls of the **Olympian Symposium**.  
+          Athena smiles upon your wisdom, and Zeus himself has witnessed your registration!
+        </p>
+        <button
+          onClick={() => setSubmitted(false)}
+          className="mt-6 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg shadow-md transition duration-300 transform hover:scale-105"
+        >
+          ✨ Return to the Mortal Realm ✨
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <section id="register" className="py-20 bg-deep-blue relative">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <motion.h2 
-            className="text-4xl md:text-5xl font-cinzel font-bold mb-4 text-gold"
-            initial={{ opacity: 0, y: -20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-          >
-            Join the Odyssey
-          </motion.h2>
-          <motion.div
-            className="h-1 w-24 mx-auto gold-gradient mb-8"
-            initial={{ width: 0 }}
-            animate={isInView ? { width: "6rem" } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          ></motion.div>
-          <motion.p 
-            className="text-lg max-w-3xl mx-auto text-gray-300"
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            Embark on your heroic journey by registering for PRANAV2K25. Choose the package that best suits your quest for knowledge and innovation.
-          </motion.p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-black text-white relative p-6">
+      {/* Glowing gold Greek heading */}
+      <div className="bg-black/70 p-8 sm:p-12 rounded-lg shadow-2xl border-t-4 border-amber-600 w-full max-w-lg transform transition duration-500 hover:scale-105 backdrop-blur-md">
+        <div className="px-6 py-8 bg-black/50 backdrop-blur-lg rounded-lg shadow-md border border-amber-600">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-amber-500 font-['Cinzel'] animate-pulse">
+              🏺 SYMPOSIUM REGISTRATION
+            </h2>
+            <p className="mt-2 text-sm text-gray-400 italic">
+              "Gather, O Seekers of Knowledge, and let the discourse of the gods enlighten thee."
+            </p>
+          </div>
 
-        <motion.div 
-          ref={ref}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-        >
-          {packages.map((pkg, index) => (
-            <motion.div 
-              key={index}
-              className={`relative bg-deep-blue/70 border ${
-                selectedPackage === pkg.id 
-                  ? 'border-light-blue glowing-border' 
-                  : pkg.recommended 
-                    ? 'border-gold' 
-                    : 'border-gold/30'
-              } rounded-lg overflow-hidden`}
-              variants={itemVariants}
-              whileHover={{ 
-                y: -10,
-                boxShadow: '0 0 15px rgba(100, 255, 218, 0.15)',
-                transition: { duration: 0.3 } 
-              }}
-            >
-              {pkg.recommended && (
-                <div className="absolute top-0 right-0 bg-light-blue text-deep-blue text-xs font-bold px-3 py-1">
-                  RECOMMENDED
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Name Field */}
+            <div className="relative">
+              <label className="block text-sm font-semibold text-amber-500">⚡ Full Name</label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="w-full bg-black border border-amber-500 text-amber-300 placeholder-gray-400 focus:ring-amber-500 focus:border-amber-500 p-2 rounded-md outline-none"
+                placeholder="Enter your name"
+                required
+              />
+            </div>
+
+            {/* Email Field */}
+            <div className="relative">
+              <label className="block text-sm font-semibold text-amber-500">📧 Email Address</label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="w-full bg-black border border-amber-500 text-amber-300 placeholder-gray-400 focus:ring-amber-500 focus:border-amber-500 p-2 rounded-md outline-none"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            {/* Institution Dropdown */}
+            <div className="relative">
+              <label className="block text-sm font-semibold text-amber-500">🏛 Select Institution</label>
+              <div
+                className="mt-1 w-full bg-black border border-amber-500 rounded-lg shadow-md cursor-pointer p-2 flex items-center justify-between text-amber-300"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <span>
+                  {formData.institution
+                    ? institutions.find((inst) => inst.value === formData.institution)?.label
+                    : "Select an institution"}
+                </span>
+                <span className={`text-amber-600 transform ${dropdownOpen ? "rotate-180" : "rotate-0"} transition`}>
+                  ▼
+                </span>
+              </div>
+
+              {dropdownOpen && (
+                <div className="absolute z-10 w-full bg-black border border-amber-600 rounded-lg shadow-lg mt-1 text-amber-300">
+                  <input
+                    type="text"
+                    placeholder="Search institution..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full p-2 border-b border-gray-700 bg-black text-amber-300 outline-none"
+                  />
+
+                  <div className="max-h-40 overflow-y-auto">
+                    {institutions
+                      .filter((inst) => inst.label.toLowerCase().includes(search.toLowerCase()))
+                      .map((inst) => (
+                        <div
+                          key={inst.value}
+                          onClick={() => handleInstitutionSelect(inst.value)}
+                          className="px-4 py-2 hover:bg-amber-800 cursor-pointer transition"
+                        >
+                          {inst.label}
+                        </div>
+                      ))}
+                  </div>
                 </div>
               )}
-              <div className="p-6">
-                <h3 className="text-2xl font-cinzel font-bold text-gold mb-2">{pkg.name}</h3>
-                <div className="flex items-end mb-6">
-                  <span className="text-3xl font-bold text-white">{pkg.price}</span>
-                  <span className="text-gray-400 ml-2">/ person</span>
-                </div>
-                <ul className="mb-8 space-y-3">
-                  {pkg.features.map((feature, i) => (
-                    <li key={i} className="flex items-start">
-                      <Check className="h-5 w-5 text-light-blue mr-2 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-300">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <motion.button 
-                  className={`w-full py-3 rounded-md font-bold transition-colors ${
-                    selectedPackage === pkg.id
-                      ? 'bg-light-blue text-deep-blue'
-                      : 'bg-transparent border border-gold text-gold hover:bg-gold/10'
-                  }`}
-                  onClick={() => setSelectedPackage(pkg.id)}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                >
-                  {selectedPackage === pkg.id ? 'Selected' : 'Select Package'}
-                </motion.button>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+            </div>
 
-        <motion.div 
-          className="max-w-3xl mx-auto bg-deep-blue/50 border border-gold/30 rounded-lg p-8"
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.8 }}
-        >
-          <h3 className="text-2xl font-cinzel font-bold text-gold mb-6">Frequently Asked Questions</h3>
-          <div className="space-y-4">
-            {faqs.map((faq, index) => (
-              <div 
-                key={index} 
-                className="border-b border-gold/20 pb-4 last:border-b-0 last:pb-0"
-              >
-                <button 
-                  className="flex justify-between items-center w-full text-left"
-                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                >
-                  <span className="text-white font-medium">{faq.question}</span>
-                  <ChevronDown 
-                    className={`h-5 w-5 text-gold transition-transform ${openFaq === index ? 'rotate-180' : ''}`} 
-                  />
-                </button>
-                {openFaq === index && (
-                  <motion.div 
-                    className="mt-3 text-gray-300"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {faq.answer}
-                  </motion.div>
-                )}
-              </div>
-            ))}
-          </div>
-        </motion.div>
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg shadow-md transition duration-300 transform hover:scale-105"
+            >
+              ⚡ Register for the Symposium
+            </button>
+          </form>
+        </div>
       </div>
-    </section>
+    </div>
   );
 };
 
-export default Register;
+export default SymposiumRegistration;
