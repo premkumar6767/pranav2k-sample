@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
 import { isValidPhoneNumber } from 'libphonenumber-js';
-// import { v4 as uuidv4 } from 'uuid'; // Remove UUID library import
 
 interface Participant {
   name: string;
@@ -14,7 +12,6 @@ interface Participant {
 interface Event {
   id: string;
   name: string;
-  price: number;
 }
 
 interface FormErrors {
@@ -30,10 +27,10 @@ const firebaseConfig = {
   messagingSenderId: "585418921196",
   appId: "1:585418921196:web:61f6c504a7b4691364c1c9"
 };
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
 const RegistrationPage: React.FC = () => {
   // State declarations
@@ -43,73 +40,36 @@ const RegistrationPage: React.FC = () => {
     { name: '', email: '', phone: '' },
     { name: '', email: '', phone: '' },
   ]);
-  const [totalPrice, setTotalPrice] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [successMessage, setSuccessMessage] = useState<string>('');
-  const [transactionId, setTransactionId] = useState<string>('');
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const [upiQRUrl, setUpiQRUrl] = useState<string>('');
-  const [isPaymentComplete, setIsPaymentComplete] = useState<boolean>(false);
 
-  // UPI details
-  const UPI_ID = "kishore.m12th@okaxis";
-  const MERCHANT_NAME = "PRANAV2k25 Events";
-
-  // Events data - Modified to remove 'coordinators'
+  // Events data
   const EVENTS = {
     technical: [
-      { id: 'Paper Presentation', name: 'Paper Presentation', price: 20 },
-      { id: 'Project expo/Hackathon', name: 'Project expo/Hackathon', price: 20 },
-      { id: 'Wired-WOnders', name: 'Wired-WOnders', price: 20 },
-      { id: 'Roll and dice', name: 'Roll and dice ', price: 20 },
-      { id: 'Robot Craze', name: 'Robot Craze ', price: 20 },
+      { id: 'Paper Presentation', name: 'Paper Presentation' },
+      { id: 'Project expo/Hackathon', name: 'Project expo/Hackathon' },
+      { id: 'Wired-WOnders', name: 'Wired-WOnders' },
+      { id: 'Roll and dice', name: 'Roll and dice ' },
+      { id: 'Robot Craze', name: 'Robot Craze ' },
     ],
     nonTechnical: [
-      { id: 'Anime ', name: ' ANIME AND MANGA', price: 10 },
-      { id: 'Aural Bliss', name: 'AURAL BLISS', price: 10 },
-      { id: 'TreasureHunt', name: 'TREASURE HUNT', price: 10 },
-      { id: 'ElectroF', name: 'ELECTRO FIELD', price: 10 },
-      { id: 'SportsBz', name: 'SPORTS BUZZ', price: 10 },
-      { id: 'OjingeoGame', name: 'OJINGEO GAME', price: 10 },
+      { id: 'Anime ', name: ' ANIME AND MANGA' },
+      { id: 'Aural Bliss', name: 'AURAL BLISS' },
+      { id: 'TreasureHunt', name: 'TREASURE HUNT' },
+      { id: 'ElectroF', name: 'ELECTRO FIELD' },
+      { id: 'SportsBz', name: 'SPORTS BUZZ' },
+      { id: 'OjingeoGame', name: 'OJINGEO GAME' },
     ],
     workshop: [
-      { id: 'DRONE ', name: 'DRONE WORKSHOP', price: 20 },
+      { id: 'DRONE ', name: 'DRONE WORKSHOP' },
     ],
     onlineevents: [
-      { id: 'shortfilm ', name: 'SHORT FILM', price: 20 },
-      { id: 'esports ', name: 'E-sports(FreeFIre/BGMI🔥', price: 20 },
+      { id: 'shortfilm ', name: 'SHORT FILM' },
+      { id: 'esports ', name: 'E-sports(FreeFIre/BGMI🔥' },
     ],
   };
-
-  // Calculate total price based on selected events
-  useEffect(() => {
-    let price = 0;
-
-    selectedEvents.forEach(eventId => {
-      for (const category in EVENTS) {
-        const event = EVENTS[category as keyof typeof EVENTS].find(e => e.id === eventId);
-        if (event) {
-          price += event.price;
-          break;
-        }
-      }
-    });
-
-    setTotalPrice(price);
-  }, [selectedEvents]);
-
-  // Generate UPI QR code whenever total price changes
-  useEffect(() => {
-    if (totalPrice > 0) {
-      // Generate UPI payment URL
-      const upiURL = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${totalPrice}&cu=INR&tn=${encodeURIComponent('Event Registration')}`;
-
-      // Generate QR code URL using a free QR code API
-      const qrCodeURL = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiURL)}`;
-      setUpiQRUrl(qrCodeURL);
-    }
-  }, [totalPrice]);
 
   // Event selection toggle
   const toggleEventSelection = (eventId: string) => {
@@ -194,28 +154,11 @@ const RegistrationPage: React.FC = () => {
     return Object.keys(errors).length === 0;
   };
 
-  // Form validation for payment step
-  const validatePaymentStep = (): boolean => {
-    let errors: FormErrors = {};
-
-    if (transactionId.trim() === '') {
-      errors.transactionId = 'Please enter your transaction ID';
-    }
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
   // Handle moving to next step
   const handleNextStep = () => {
     if (currentStep === 1) {
       if (validateFirstStep()) {
         setCurrentStep(2);
-        window.scrollTo(0, 0);
-      }
-    } else if (currentStep === 2) {
-      if (validateSecondStep()) {
-        setCurrentStep(3);
         window.scrollTo(0, 0);
       }
     }
@@ -227,38 +170,22 @@ const RegistrationPage: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
-  // Define payment status constants (same as app)
-  const PAYMENT_STATUS = {
-    PENDING: 'PENDING',
-    VERIFICATION_PENDING: 'VERIFICATION_PENDING',
-    COMPLETED: 'COMPLETED',
-    FAILED: 'FAILED'
-  };
-
   // Handle form submission
   const handleRegistration = async () => {
-    // Only validate transaction ID
-    if (!validatePaymentStep()) return;
+    // Validate participant details
+    if (!validateSecondStep()) return;
 
     setIsSubmitting(true);
     try {
-      // Generate a unique transaction ID (using app's method)
-      const generatedTransactionId = `PRANAV-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-      setTransactionId(generatedTransactionId);
-
       // Prepare registration data
       const registrationData = {
         registrationNumber: participants[0].phone,
         teamName,
         participants,
-        events: selectedEvents, // Store event IDs
-        totalPrice,
+        events: selectedEvents,
         registrationDate: new Date(),
         attendanceMarked: false,
-        marks: {},
-        paymentStatus: PAYMENT_STATUS.VERIFICATION_PENDING, // Use consistent status
-        paymentMethod: 'UPI/Bank Transfer',
-        transactionId: generatedTransactionId // Use generated transaction ID
+        marks: {}
       };
 
       // Store in Firestore with phone number as ID
@@ -269,13 +196,11 @@ const RegistrationPage: React.FC = () => {
 
       console.log('Registration added with ID: ', phoneNumber);
       setSuccessMessage('Registration Successful! Your registration number is: ' + phoneNumber);
-      setIsPaymentComplete(true);
 
       // Reset form
       setTeamName('');
       setSelectedEvents([]);
       setParticipants([{ name: '', email: '', phone: '' }, { name: '', email: '', phone: '' }]);
-      setTransactionId('');
       setFormErrors({});
       setCurrentStep(1);
 
@@ -368,7 +293,7 @@ const RegistrationPage: React.FC = () => {
                 className={greekStyles.label}
                 style={{ marginLeft: '0.5rem' }}
               >
-                {event.name} - ₹{event.price}
+                {event.name}
               </label>
             </div>
           ))}
@@ -392,7 +317,7 @@ const RegistrationPage: React.FC = () => {
                 className={greekStyles.label}
                 style={{ marginLeft: '0.5rem' }}
               >
-                {event.name} - ₹{event.price}
+                {event.name}
               </label>
             </div>
           ))}
@@ -416,7 +341,7 @@ const RegistrationPage: React.FC = () => {
                 className={greekStyles.label}
                 style={{ marginLeft: '0.5rem' }}
               >
-                {event.name} - ₹{event.price}
+                {event.name}
               </label>
             </div>
           ))}
@@ -440,7 +365,7 @@ const RegistrationPage: React.FC = () => {
                 className={greekStyles.label}
                 style={{ marginLeft: '0.5rem' }}
               >
-                {event.name} - ₹{event.price}
+                {event.name}
               </label>
             </div>
           ))}
@@ -575,82 +500,12 @@ const RegistrationPage: React.FC = () => {
           </button>
           <button
             className={greekStyles.btn}
-            onClick={handleNextStep}
+            onClick={handleRegistration}
             disabled={isSubmitting}
           >
-            Next {'>'}
+            {isSubmitting ? 'Submitting...' : 'Complete Registration'}
           </button>
         </div>
-      </div>
-    </>
-  );
-
-  // Render function for the third step
-  const renderStep3 = () => (
-    <>
-      {/* Payment Information */}
-      <div className={greekStyles.card}>
-        <h2 className={greekStyles.cardHeader}>Payment Information</h2>
-        <p className={greekStyles.cardSubheader}>
-          Total Amount: ₹{totalPrice}
-        </p>
-        <div className="mb-4">
-          <label
-            htmlFor="transactionId"
-            className={greekStyles.label}
-          >
-            Transaction ID
-          </label>
-          <input
-            type="text"
-            id="transactionId"
-            className={greekStyles.inputField}
-            value={transactionId}
-            onChange={(e) => setTransactionId(e.target.value)}
-            placeholder="Enter transaction ID"
-          />
-          {formErrors.transactionId && (
-            <p className={greekStyles.errorText}>
-              {formErrors.transactionId}
-            </p>
-          )}
-        </div>
-
-        {/* UPI QR Code (if total price is available) */}
-        {totalPrice > 0 && (
-          <div className="flex flex-col items-center mb-6">
-            <p className={greekStyles.label}>Scan this QR code to pay:</p>
-            {upiQRUrl ? (
-              <img
-                src={upiQRUrl}
-                alt="UPI QR Code"
-                className="w-48 h-48"
-              />
-            ) : (
-              <p className={greekStyles.errorText}>
-                Generating QR Code...
-              </p>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Navigation Buttons */}
-      <div className="flex justify-between mt-6">
-        <button
-          className={greekStyles.btnSecondary}
-          onClick={handlePreviousStep}
-          disabled={isSubmitting}
-        >
-          {'<'} Back
-        </button>
-        <button
-          className={greekStyles.btn}
-          onClick={handleRegistration}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? 'Submitting...' : 'Complete Registration'}
-        </button>
       </div>
     </>
   );
@@ -685,22 +540,16 @@ const RegistrationPage: React.FC = () => {
                 <div className={currentStep >= 2 ? greekStyles.stepIndicator.active : greekStyles.stepIndicator.inactive}>
                   2
                 </div>
-                <div className={currentStep >= 3 ? greekStyles.stepIndicator.lineActive : greekStyles.stepIndicator.lineInactive}></div>
-                <div className={currentStep >= 3 ? greekStyles.stepIndicator.active : greekStyles.stepIndicator.inactive}>
-                  3
-                </div>
               </div>
               <div className="text-sm text-amber-400 font-serif mt-2">
                 {currentStep === 1 && 'Step 1: Team & Event Selection'}
                 {currentStep === 2 && 'Step 2: Participant Details'}
-                {currentStep === 3 && 'Step 3: Payment & Confirmation'}
               </div>
             </div>
 
             {/* Form Steps */}
             {currentStep === 1 && renderStep1()}
             {currentStep === 2 && renderStep2()}
-            {currentStep === 3 && renderStep3()}
           </>
         )}
 
