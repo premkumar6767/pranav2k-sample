@@ -1,9 +1,7 @@
-import React, { useRef } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import React, { useRef, useMemo } from "react";
+import { motion, useInView } from "framer-motion";
 import "../index.css";
 import laurel from "./../images/laurelbg.png";
-import { useNavigate } from 'react-router-dom';
-import prof from "./../images/profone.jpeg"
 import { 
   Zap, 
   Compass, 
@@ -20,129 +18,39 @@ const About: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { amount: 0.3 });
 
-  const features = [
+  // Memoize features to prevent unnecessary re-renders
+  const features = useMemo(() => [
     { 
-      icon: <Zap className="h-6 w-6 md:h-8 md:w-8 text-light-blue" />, 
-      image: prof,  
+      icon: <Zap className="h-5 w-5 md:h-8 md:w-8 text-light-blue" />, 
+      image: "/images/profone.jpeg",  
       deity: "Founder", 
       title: "Prof.K.R.Sundararajan ", 
       description: "Prof. K.R. Sundararajan founded IIET in 1947 to expand engineering education, later establishing Meenakshi College for Women in 1974. His vision led to the creation of Meenakshi Sundararajan Engineering College in 2001. His legacy continues to shape engineering education in South India."
     },
-    { 
-      icon: <Compass className="h-6 w-6 md:h-8 md:w-8 text-light-blue" />, 
-      image: "/images/professor2.jpg", 
-      deity: "Former Secretary", 
-      title: "Dr K.S. Babai", 
-      description: "Dr. K.S. Babai, an alumna of CEG, IIT Madras, and Annamalai University, led Meenakshi Sundararajan Engineering College with dedication. She excelled in technical education, inspiring others with her perseverance. Her lifelong commitment was to uplift and educate future generations." 
-    },
-    { 
-      icon: <BookOpen className="h-6 w-6 md:h-8 md:w-8 text-light-blue" />, 
-      image: "/images/professor3.jpg", 
-      deity: "Secretary", 
-      title: "Mr.N. Sreekanth", 
-      description: "Mr. N. Sreekanth, our secretary, promotes skill development through diverse programs and club activities. His focus on extracurriculars fosters teamwork, creativity, and problem-solving. He empowers students to become well-rounded professionals." 
-    },
-    { 
-      icon: <Scroll className="h-6 w-6 md:h-8 md:w-8 text-light-blue" />, 
-      image: "/images/professor4.jpg",
-      deity: "Principal",
-      title: "Dr.S.V.Saravanan", 
-      description: "Dr. S. V. Saravanan, our principal, blends technical skills with academics, creating a supportive learning environment. His motivational guidance inspires students to excel. Beyond administration, he mentors students, shaping their journey toward success." 
-    },
-  ];
+    // Add more features here if needed
+  ], []);
 
+  // Optimize stagger and fade animations
   const staggerContainer = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.3
+        staggerChildren: 0.2 // Slightly reduced stagger for smoother animation
       }
     }
   };
 
   const fadeInUp = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
-      opacity: 1, // Fixed from opacity: 20 to proper value
+      opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5, // Increased from 0.005 for better visibility
-        ease: [0.6, 0.01, 0.01, 0.9]
+        duration: 0.4, // Slightly reduced duration
+        ease: "easeOut"
       }
     }
-  };
-
-  // Lightning effect component
-  const Lightning = () => {
-    return (
-      <>
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={`lightning-${i}`}
-            className="absolute bg-blue-400"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${10 + Math.random() * 80}%`,
-              width: `${5 + Math.random() * 2}px`,
-              height: `${500 + Math.random() * 150}px`,
-              filter: 'blur(1px)',
-              transformOrigin: 'top',
-              rotate: Math.random() > 0.6? `${-5 - Math.random() * 10}deg` : `${5 + Math.random() * 10}deg`,
-              opacity: 0,
-              zIndex: 5,
-              boxShadow: '0 0 10px 2px rgba(135, 206, 235, 0.8), 0 0 20px 6px rgba(135, 206, 235, 0.4)'
-            }}
-            animate={{
-              opacity: [0, 0.9, 0.4],
-              scaleY: [0, 1, 0],
-            }}
-            transition={{
-              duration: 6,
-              repeat: Infinity,
-              repeatDelay: 3 + Math.random() * 10,
-              ease: "easeOut",
-              delay: i * 1.2
-            }}
-          />
-        ))}
-      </>
-    );
-  };
-
-  // Asteroid effect component
-  const Asteroids = () => {
-    return (
-      <>
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={`asteroid-${i}`}
-            className="absolute bg-gray-300 rounded-full z-10"
-            style={{
-              width: `${3 + Math.random() * 6}px`,
-              height: `${3 + Math.random() * 6}px`,
-              filter: 'blur(0.5px)',
-              boxShadow: '0 0 4px 1px rgba(255, 255, 255, 0.8), 0 0 8px 2px rgba(255, 215, 0, 0.4)',
-              top: `-20px`,
-              left: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              x: [(Math.random() - 0.5) * 200, (Math.random() - 0.5) * 400],
-              y: [0, window.innerHeight + 50],
-              rotate: [0, Math.random() * 720],
-              opacity: [0, 1, 1, 0]
-            }}
-            transition={{
-              duration: 3 + Math.random() * 4,
-              repeat: Infinity,
-              repeatDelay: Math.random() * 5,
-              ease: "easeIn",
-              delay: i * 0.8
-            }}
-          />
-        ))}
-      </>
-    );
   };
 
   return (
@@ -151,7 +59,7 @@ const About: React.FC = () => {
       className="relative py-16 md:py-24 bg-cover bg-center text-white overflow-hidden"
       style={{ backgroundImage: "url('/ancient-greek-bg.jpg')" }}
     >
-      {/* Enhanced background effects */}
+      {/* Background and Particle Effects */}
       <div className="absolute inset-0 bg-black/70">
         {/* Animated cosmic background with increased visibility */}
         <div className="absolute inset-0 opacity-50">
@@ -170,13 +78,7 @@ const About: React.FC = () => {
         <div className="absolute inset-0 opacity-30 bg-repeat" style={{ backgroundImage: "url('/greek-pattern.png')" }}></div>
       </div>
       
-      {/* Enhanced Lightning Effect */}
-      <Lightning />
-      
-      {/* Enhanced Asteroid Effect */}
-      <Asteroids />
-      
-      {/* Enhanced celestial particles with increased visibility */}
+      {/* Celestial particles background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Stars background */}
         {[...Array(150)].map((_, i) => (
@@ -203,66 +105,10 @@ const About: React.FC = () => {
             }}
           />
         ))}
-        
-        {/* Larger glowing orbs with increased visibility */}
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={`orb-${i}`}
-            className="absolute rounded-full z-10"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: `${Math.random() * 12 + 5}px`,
-              height: `${Math.random() * 12 + 5}px`,
-              backgroundColor: Math.random() > 0.7 ? '#FFD700' : '#87CEEB',
-              boxShadow: Math.random() > 0.7 
-                ? '0 0 12px 3px rgba(255, 215, 0, 0.9)' 
-                : '0 0 12px 3px rgba(135, 206, 235, 0.9)'
-            }}
-            animate={{
-              opacity: [0.5, 0.9, 0.5],
-              scale: [1, 1.5, 1],
-              x: [0, (Math.random() - 0.5) * 50, 0],
-              y: [0, (Math.random() - 0.5) * 50, 0]
-            }}
-            transition={{
-              duration: 4 + Math.random() * 8,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: Math.random() * 3
-            }}
-          />
-        ))}
-        
-        {/* Enhanced shooting stars effect */}
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={`shooting-${i}`}
-            className="absolute w-2 h-2 bg-white z-20"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 30}%`,
-              boxShadow: '0 0 15px 4px rgba(255, 255, 255, 0.9), 0 0 30px 10px rgba(255, 215, 0, 0.6)',
-              borderRadius: '50%'
-            }}
-            animate={{
-              x: [0, Math.random() > 0.5 ? 500 : -500],
-              y: [0, 500],
-              opacity: [0, 1, 0],
-              scale: [0.1, 2, 0.1]
-            }}
-            transition={{
-              duration: 1,
-              repeat: Infinity,
-              repeatDelay: 3 + Math.random() * 8,
-              ease: "easeOut",
-              delay: i * 2
-            }}
-          />
-        ))}
       </div>
 
       <div className="relative container mx-auto px-4">
+        {/* Header Section */}
         <div className="text-center mb-16 md:mb-20">
           <motion.div
             className="relative inline-block mb-6"
@@ -306,6 +152,7 @@ const About: React.FC = () => {
           </motion.p>
         </div>
 
+        {/* Features Grid */}
         <motion.div
           ref={ref}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative"
@@ -320,35 +167,15 @@ const About: React.FC = () => {
               className="relative overflow-hidden group"
               variants={fadeInUp}
             >
-              {/* Greek column decorative elements */}
-              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-4 bg-contain bg-no-repeat bg-center opacity-80" style={{ backgroundImage: "url('/greek-column-top.png')" }}></div>
-              
               <div className="bg-black/40 backdrop-blur-sm border border-gold/30 p-6 md:p-8 rounded-lg hover:border-gold transition-all duration-500 group-hover:bg-black/60 h-full flex flex-col">
-                {/* Greek deity association at the top */}
                 <div className="mb-2 text-xs text-gold/80 font-cinzel tracking-wider">GUIDED BY {feature.deity}</div>
                 
-                {/* Professor image with decorative frame and glow effect */}
                 <div className="relative mb-4 overflow-hidden rounded-lg border-2 border-gold/50 p-1 group-hover:border-gold transition-colors duration-500">
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/0 to-black/80 z-10"></div>
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-radial from-gold/20 to-transparent z-5 opacity-0 group-hover:opacity-100"
-                    animate={{
-                      opacity: [0, 0.5, 0],
-                      scale: [0.9, 1.1, 0.9]
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                  ></motion.div>
                   <img 
                     src={feature.image} 
                     alt={feature.title} 
                     className="w-full h-48 object-cover object-center transform group-hover:scale-110 transition-transform duration-700"
                   />
-                  {/* Greek decorative overlay pattern */}
-                  <div className="absolute inset-0 bg-repeat opacity-30" style={{ backgroundImage: "url('/greek-pattern-small.png')" }}></div>
                 </div>
                 
                 <div className="bg-gold/20 p-3 rounded-full w-fit mb-4 group-hover:bg-gold/40 transition-colors">
@@ -360,9 +187,6 @@ const About: React.FC = () => {
                 </h3>
                 
                 <p className="text-sm md:text-base text-gray-300 mt-auto">{feature.description}</p>
-                
-                {/* Greek ornamental divider */}
-                <div className="w-full h-4 mt-4 bg-contain bg-no-repeat bg-center opacity-50 group-hover:opacity-80 transition-opacity" style={{ backgroundImage: "url('/greek-ornament.png')" }}></div>
               </div>
             </motion.div>
           ))}
