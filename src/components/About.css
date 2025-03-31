@@ -1,0 +1,75 @@
+/* 🔥 Fire Sparks Animation */
+@keyframes fire-sparks {
+    0% {
+      opacity: 0.2;
+      transform: translateY(0px) scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: translateY(-50px) scale(1.2);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-100px) scale(1.5);
+    }
+  }
+  
+  .fire-sparks {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("../images/image.png") no-repeat center;
+    background-size: cover;
+    opacity: 0.5;
+    mix-blend-mode: screen;
+    animation: fire-sparks 3s infinite linear;
+    pointer-events: none;
+  }
+  
+  /* ✨ Glowing Greek Title Effect (Only for Text) */
+  /* ✨ Simple Glowing Greek Title Effect */
+.glowing-title {
+    font-size: 50px;
+    font-family: "Cinzel", serif;
+    font-weight: bold;
+    color: gold;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  
+  
+  @keyframes glowing {
+    0% { text-shadow: 0 0 10px gold; }
+    25% { text-shadow: 0 0 10px red; }
+    50% { text-shadow: 0 0 10px orange; }
+    75% { text-shadow: 0 0 10px yellow; }
+    100% { text-shadow: 0 0 10px gold; }
+  }
+  @keyframes pulseGlow {
+    0% {
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.9);
+    }
+    100% {
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+  }
+  
+  .shadow-gold {
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+  }
+  
+  .bg-glow {
+    background: radial-gradient(circle, rgba(255, 223, 88, 0.5) 0%, rgba(0, 0, 0, 0) 80%);
+  }
+  
+  .animate-glow {
+    animation: pulseGlow 2.5s infinite alternate ease-in-out;
+  }
+  

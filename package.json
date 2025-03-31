@@ -1,7 +1,7 @@
 {
   "name": "pranav2k25-symposium",
   "private": true,
-  "homepage":"https://theeightboys.github.io/pranav2k25-symposium",
+  "homepage": "https://premkumar6767.github.io/pranav2k-sample/",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -13,9 +13,11 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@google/model-viewer": "^3.3.0",
     "@react-three/drei": "^9.74.0",
     "@react-three/fiber": "^8.0.27",
+    "@types/react-helmet": "^6.1.11",
     "firebase": "^11.4.0",
     "framer-motion": "^11.18.2",
     "libphonenumber-js": "^1.12.6",
@@ -23,6 +25,7 @@
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-helmet": "^6.1.0",
     "react-router-dom": "^7.3.0",
     "three": "^0.163.0"
   },
@@ -39,6 +42,7 @@
     "gh-pages": "^6.3.0",
     "globals": "^15.9.0",
     "postcss": "^8.5.3",
+    "sass-embedded": "^1.86.0",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.3.0",

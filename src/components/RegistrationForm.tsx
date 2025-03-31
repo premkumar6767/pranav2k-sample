@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import emailjs from '@emailjs/browser';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
 import { isValidPhoneNumber } from 'libphonenumber-js';
 
+// TypeScript Interfaces
 interface Participant {
   name: string;
   email: string;
@@ -18,7 +20,7 @@ interface FormErrors {
   [key: string]: string;
 }
 
-// Firebase config - replace with your actual config
+// Firebase Configuration (IMPORTANT: Replace with your actual config)
 const firebaseConfig = {
   apiKey: "AIzaSyAaUkjeSXqpppIO4A0bd7bBiP8Wncv4juE",
   authDomain: "sympo-acd3c.firebaseapp.com",
@@ -31,6 +33,12 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+const EMAILJS_CONFIG = {
+  SERVICE_ID: 'service_zhp76nl',
+  TEMPLATE_ID: 'template_ge1bl5a',
+  PUBLIC_KEY: 'rmTViAJq1uQiY5YlG'
+};
 
 const RegistrationPage: React.FC = () => {
   // State declarations
@@ -45,7 +53,7 @@ const RegistrationPage: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [currentStep, setCurrentStep] = useState<number>(1);
 
-  // Events data
+  // Events data (Consistent with the data provided in the query)
   const EVENTS = {
     technical: [
       { id: 'Paper Presentation', name: 'Paper Presentation' },
@@ -55,7 +63,7 @@ const RegistrationPage: React.FC = () => {
       { id: 'Robot Craze', name: 'Robot Craze ' },
     ],
     nonTechnical: [
-      { id: 'Anime ', name: ' ANIME AND MANGA' },
+      { id: 'Anime ', name: 'ANIME AND MANGA' },
       { id: 'Aural Bliss', name: 'AURAL BLISS' },
       { id: 'TreasureHunt', name: 'TREASURE HUNT' },
       { id: 'ElectroF', name: 'ELECTRO FIELD' },
@@ -67,23 +75,47 @@ const RegistrationPage: React.FC = () => {
     ],
     onlineevents: [
       { id: 'shortfilm ', name: 'SHORT FILM' },
-      { id: 'esports ', name: 'E-sports(FreeFIre/BGMI🔥' },
+      { id: 'esports ', name: 'E-sports(FreeFIre/BGMI🔥)' },
     ],
+  };
+
+  // Email sending function
+  const sendConfirmationEmail = async (participant: Participant) => {
+    try {
+      const templateParams = {
+        to_name: participant.name,
+        to_email: participant.email,
+        team_name: teamName,
+        events: selectedEvents.join(', '),
+        registration_number: participant.phone
+      };
+      // Send email using EmailJS
+      const response = await emailjs.send(
+        EMAILJS_CONFIG.SERVICE_ID,
+        EMAILJS_CONFIG.TEMPLATE_ID,
+        templateParams,
+        EMAILJS_CONFIG.PUBLIC_KEY
+      );
+      console.log('Email sent successfully', response);
+    } catch (error) {
+      console.error('Failed to send email', error);
+      throw new Error('Email sending failed');
+    }
   };
 
   // Event selection toggle
   const toggleEventSelection = (eventId: string) => {
-    if (selectedEvents.includes(eventId)) {
-      setSelectedEvents(selectedEvents.filter((id) => id !== eventId));
-    } else {
-      setSelectedEvents([...selectedEvents, eventId]);
-    }
+    setSelectedEvents(prev =>
+      prev.includes(eventId)
+        ? prev.filter((id) => id !== eventId)
+        : [...prev, eventId]
+    );
   };
 
   // Add participant
   const addParticipant = () => {
     if (participants.length < 6) {
-      setParticipants([...participants, { name: '', email: '', phone: '' }]);
+      setParticipants(prev => [...prev, { name: '', email: '', phone: '' }]);
     } else {
       alert('Maximum Limit: You can add up to 6 participants only.');
     }
@@ -92,9 +124,11 @@ const RegistrationPage: React.FC = () => {
   // Remove participant
   const removeParticipant = (index: number) => {
     if (participants.length > 1) {
-      const newParticipants = [...participants];
-      newParticipants.splice(index, 1);
-      setParticipants(newParticipants);
+      setParticipants(prev => {
+        const newParticipants = [...prev];
+        newParticipants.splice(index, 1);
+        return newParticipants;
+      });
     } else {
       alert('Minimum Required: At least 1 participant is required.');
     }
@@ -102,33 +136,42 @@ const RegistrationPage: React.FC = () => {
 
   // Update participant details
   const updateParticipant = (index: number, field: keyof Participant, value: string) => {
-    const newParticipants = [...participants];
-    newParticipants[index][field] = value;
-    setParticipants(newParticipants);
+    setParticipants(prev => {
+      const newParticipants = [...prev];
+      newParticipants[index][field] = value;
+      return newParticipants;
+    });
   };
 
-  // Form validation for first step (team and event selection)
+  // Handle next step
+  const handleNextStep = () => {
+    if (validateFirstStep()) {
+      setCurrentStep(2);
+    }
+  };
+
+  // Handle previous step
+  const handlePreviousStep = () => {
+    setCurrentStep(1);
+  };
+
+  // Form validation for first step
   const validateFirstStep = (): boolean => {
     let errors: FormErrors = {};
-
     if (teamName.trim() === '') {
       errors.teamName = 'Please enter a team name';
     }
-
     if (selectedEvents.length === 0) {
       errors.events = 'Please select at least one event';
     }
-
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
-  // Form validation for second step (participant details)
+  // Form validation for second step
   const validateSecondStep = (): boolean => {
     let errors: FormErrors = {};
-
-    for (let i = 0; i < participants.length; i++) {
-      const p = participants[i];
+    participants.forEach((p, i) => {
       if (p.name.trim() === '') {
         errors[`participants[${i}].name`] = `Please enter name for Participant ${i + 1}`;
       }
@@ -138,43 +181,23 @@ const RegistrationPage: React.FC = () => {
       if (p.phone.trim() === '') {
         errors[`participants[${i}].phone`] = `Please enter phone for Participant ${i + 1}`;
       }
-
       const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
       if (p.email && !emailRegex.test(p.email)) {
         errors[`participants[${i}].email`] = `Invalid email for Participant ${i + 1}`;
       }
-
       // Phone number validation
       if (p.phone && !isValidPhoneNumber(p.phone, 'IN')) {
         errors[`participants[${i}].phone`] = `Invalid phone number for Participant ${i + 1}`;
       }
-    }
-
+    });
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
-  // Handle moving to next step
-  const handleNextStep = () => {
-    if (currentStep === 1) {
-      if (validateFirstStep()) {
-        setCurrentStep(2);
-        window.scrollTo(0, 0);
-      }
-    }
-  };
-
-  // Handle going back to previous step
-  const handlePreviousStep = () => {
-    setCurrentStep(currentStep - 1);
-    window.scrollTo(0, 0);
-  };
-
-  // Handle form submission
+  // Handle registration submission
   const handleRegistration = async () => {
     // Validate participant details
     if (!validateSecondStep()) return;
-
     setIsSubmitting(true);
     try {
       // Prepare registration data
@@ -187,27 +210,25 @@ const RegistrationPage: React.FC = () => {
         attendanceMarked: false,
         marks: {}
       };
-
-      // Store in Firestore with phone number as ID
+      // Store in Firestore
       const phoneNumber = participants[0].phone;
       const registrationsRef = collection(db, 'registrations');
       const docRef = doc(registrationsRef, phoneNumber);
       await setDoc(docRef, registrationData);
-
-      console.log('Registration added with ID: ', phoneNumber);
-      setSuccessMessage('Registration Successful! Your registration number is: ' + phoneNumber);
-
+      // Send confirmation emails to each participant
+      await Promise.all(participants.map(sendConfirmationEmail));
+      // Set success message
+      setSuccessMessage(`Registration Successful! Your registration number is: ${phoneNumber}`);
       // Reset form
       setTeamName('');
       setSelectedEvents([]);
       setParticipants([{ name: '', email: '', phone: '' }, { name: '', email: '', phone: '' }]);
       setFormErrors({});
       setCurrentStep(1);
-
-      // Scroll to top to show success message
+      // Scroll to top
       window.scrollTo(0, 0);
     } catch (error) {
-      console.error('Error adding registration: ', error);
+      console.error('Registration error:', error);
       setFormErrors({
         submission: 'Failed to submit registration. Please try again.'
       });
@@ -274,7 +295,6 @@ const RegistrationPage: React.FC = () => {
         <p className={greekStyles.cardSubheader}>
           Select the events you want to participate in:
         </p>
-
         {/* Technical Events */}
         <div className="mb-6">
           <h3 className={greekStyles.subheaderText}>Technical Events</h3>
@@ -298,7 +318,6 @@ const RegistrationPage: React.FC = () => {
             </div>
           ))}
         </div>
-
         {/* Non-Technical Events */}
         <div className="mb-6">
           <h3 className={greekStyles.subheaderText}>Non-Technical Events</h3>
@@ -322,7 +341,6 @@ const RegistrationPage: React.FC = () => {
             </div>
           ))}
         </div>
-
         {/* Workshops */}
         <div className="mb-6">
           <h3 className={greekStyles.subheaderText}>Workshops</h3>
@@ -346,7 +364,6 @@ const RegistrationPage: React.FC = () => {
             </div>
           ))}
         </div>
-
         {/* Online Events */}
         <div className="mb-6">
           <h3 className={greekStyles.subheaderText}>Online Events</h3>
@@ -370,20 +387,17 @@ const RegistrationPage: React.FC = () => {
             </div>
           ))}
         </div>
-
         {formErrors.events && (
           <p className={greekStyles.errorText}>{formErrors.events}</p>
         )}
       </div>
-
       {/* Navigation Buttons */}
       <div className="flex justify-end mt-6">
         <button
-          className={greekStyles.btn}
+          className={greekStyles.btnSecondary}
           onClick={handleNextStep}
-          disabled={isSubmitting}
         >
-          Next {'>'}
+          Next
         </button>
       </div>
     </>
@@ -392,171 +406,201 @@ const RegistrationPage: React.FC = () => {
   // Render function for the second step
   const renderStep2 = () => (
     <>
-      {/* Participants Information */}
+      {/* Participant Details */}
       <div className={greekStyles.card}>
-        <h2 className={greekStyles.cardHeader}>Participants Information</h2>
+        <h2 className={greekStyles.cardHeader}>Participant Details</h2>
         <p className={greekStyles.cardSubheader}>
-          Enter details for each participant:
+          Enter the details of the participants:
         </p>
         {participants.map((participant, index) => (
-          <div key={index} className="mb-6 border-b border-amber-500 pb-4">
-            <h3 className={greekStyles.subheaderText}>
+          <div key={index} className="mb-6">
+            <h4 className={greekStyles.subheaderText}>
               Participant {index + 1}
-            </h3>
-            <div className="mb-4">
-              <label
-                htmlFor={`name-${index}`}
-                className={greekStyles.label}
-              >
-                Name
-              </label>
-              <input
-                type="text"
-                id={`name-${index}`}
-                className={greekStyles.inputField}
-                value={participant.name}
-                onChange={(e) =>
-                  updateParticipant(index, 'name', e.target.value)
-                }
-                placeholder="Enter name"
-              />
-              {formErrors[`participants[${index}].name`] && (
-                <p className={greekStyles.errorText}>
-                  {formErrors[`participants[${index}].name`]}
-                </p>
-              )}
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label
+                  htmlFor={`name-${index}`}
+                  className={greekStyles.label}
+                >
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id={`name-${index}`}
+                  className={greekStyles.inputField}
+                  value={participant.name}
+                  onChange={(e) =>
+                    updateParticipant(index, 'name', e.target.value)
+                  }
+                  placeholder="Enter name"
+                />
+                {formErrors[`participants[${index}].name`] && (
+                  <p className={greekStyles.errorText}>
+                    {formErrors[`participants[${index}].name`]}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label
+                  htmlFor={`email-${index}`}
+                  className={greekStyles.label}
+                >
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id={`email-${index}`}
+                  className={greekStyles.inputField}
+                  value={participant.email}
+                  onChange={(e) =>
+                    updateParticipant(index, 'email', e.target.value)
+                  }
+                  placeholder="Enter email"
+                />
+                {formErrors[`participants[${index}].email`] && (
+                  <p className={greekStyles.errorText}>
+                    {formErrors[`participants[${index}].email`]}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label
+                  htmlFor={`phone-${index}`}
+                  className={greekStyles.label}
+                >
+                  Phone
+                </label>
+                <input
+                  type="tel"
+                  id={`phone-${index}`}
+                  className={greekStyles.inputField}
+                  value={participant.phone}
+                  onChange={(e) =>
+                    updateParticipant(index, 'phone', e.target.value)
+                  }
+                  placeholder="Enter phone number"
+                />
+                {formErrors[`participants[${index}].phone`] && (
+                  <p className={greekStyles.errorText}>
+                    {formErrors[`participants[${index}].phone`]}
+                  </p>
+                )}
+              </div>
             </div>
-            <div className="mb-4">
-              <label
-                htmlFor={`email-${index}`}
-                className={greekStyles.label}
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id={`email-${index}`}
-                className={greekStyles.inputField}
-                value={participant.email}
-                onChange={(e) =>
-                  updateParticipant(index, 'email', e.target.value)
-                }
-                placeholder="Enter email"
-              />
-              {formErrors[`participants[${index}].email`] && (
-                <p className={greekStyles.errorText}>
-                  {formErrors[`participants[${index}].email`]}
-                </p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor={`phone-${index}`}
-                className={greekStyles.label}
-              >
-                Phone
-              </label>
-              <input
-                type="tel"
-                id={`phone-${index}`}
-                className={greekStyles.inputField}
-                value={participant.phone}
-                onChange={(e) =>
-                  updateParticipant(index, 'phone', e.target.value)
-                }
-                placeholder="Enter phone number"
-              />
-              {formErrors[`participants[${index}].phone`] && (
-                <p className={greekStyles.errorText}>
-                  {formErrors[`participants[${index}].phone`]}
-                </p>
-              )}
-            </div>
-            {index > 0 && (
-              <button
-                type="button"
-                className={greekStyles.btnDanger}
-                onClick={() => removeParticipant(index)}
-              >
-                Remove Participant
-              </button>
-            )}
           </div>
         ))}
-        <button
-          type="button"
-          className={greekStyles.btnSecondary}
-          onClick={addParticipant}
-        >
-          Add Participant
-        </button>
-        <div className="flex justify-between mt-6">
-          <button
-            className={greekStyles.btnSecondary}
-            onClick={handlePreviousStep}
-            disabled={isSubmitting}
-          >
-            {'<'} Back
-          </button>
-          <button
-            className={greekStyles.btn}
-            onClick={handleRegistration}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Submitting...' : 'Complete Registration'}
-          </button>
+        {/* Add/Remove Participant Buttons */}
+        <div className="flex justify-between mt-4">
+          {participants.length < 6 && (
+            <button
+              type="button"
+              className={greekStyles.btnSecondary}
+              onClick={addParticipant}
+            >
+              Add Participant
+            </button>
+          )}
+          {participants.length > 1 && (
+            <button
+              type="button"
+              className={greekStyles.btnDanger}
+              onClick={() => removeParticipant(participants.length - 1)}
+            >
+              Remove Participant
+            </button>
+          )}
         </div>
+      </div>
+      {/* Navigation Buttons */}
+      <div className="flex justify-between mt-6">
+        <button
+          className={greekStyles.btnSecondary}
+          onClick={handlePreviousStep}
+        >
+          Previous
+        </button>
+        <button
+          className={greekStyles.btn}
+          onClick={handleRegistration}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Submitting...' : 'Register'}
+        </button>
       </div>
     </>
   );
 
   return (
-    <div className={greekStyles.background}>
-      <div className={greekStyles.container}>
-        <header className="text-center mb-8">
-          <h1 className={`text-4xl ${greekStyles.headerText}`}>PRANAV2k25</h1>
-          <p className={greekStyles.subheaderText}>Event Registration</p>
-        </header>
+    <div className={greekStyles.container}>
+      {/* Greek-themed header */}
+      <header className="text-center mb-12">
+        <h1 className={greekStyles.headerText}>PRANAV2k25</h1>
+        <p className={greekStyles.subheaderText}>
+          Unleash the Olympian Within
+        </p>
+      </header>
 
-        {/* Success Message */}
-        {successMessage && (
-          <div className={greekStyles.successBox}>
-            <h2 className={greekStyles.successHeader}>
-              {successMessage}
-            </h2>
-          </div>
-        )}
-
-        {/* Registration Form */}
-        {!successMessage && (
-          <>
-            {/* Step Indicators */}
-            <div className="flex flex-col items-center mb-8">
-              <div className="flex items-center">
-                <div className={currentStep >= 1 ? greekStyles.stepIndicator.active : greekStyles.stepIndicator.inactive}>
-                  1
-                </div>
-                <div className={currentStep >= 2 ? greekStyles.stepIndicator.lineActive : greekStyles.stepIndicator.lineInactive}></div>
-                <div className={currentStep >= 2 ? greekStyles.stepIndicator.active : greekStyles.stepIndicator.inactive}>
-                  2
-                </div>
-              </div>
-              <div className="text-sm text-amber-400 font-serif mt-2">
-                {currentStep === 1 && 'Step 1: Team & Event Selection'}
-                {currentStep === 2 && 'Step 2: Participant Details'}
-              </div>
+      {/* Registration Form */}
+      <div className="flex justify-center">
+        <div className="w-full max-w-2xl">
+          {successMessage ? (
+            /* Success Message Box */
+            <div className={greekStyles.successBox}>
+              <h2 className={greekStyles.successHeader}>
+                {successMessage}
+              </h2>
             </div>
+          ) : (
+            <>
+              {/* Step Indicators */}
+              <div className="flex flex-col items-center mb-8">
+                <div className="flex items-center">
+                  <div
+                    className={
+                      currentStep >= 1
+                        ? greekStyles.stepIndicator.active
+                        : greekStyles.stepIndicator.inactive
+                    }
+                  >
+                    1
+                  </div>
+                  <div
+                    className={
+                      currentStep >= 2
+                        ? greekStyles.stepIndicator.lineActive
+                        : greekStyles.stepIndicator.lineInactive
+                    }
+                  ></div>
+                  <div
+                    className={
+                      currentStep >= 2
+                        ? greekStyles.stepIndicator.active
+                        : greekStyles.stepIndicator.inactive
+                    }
+                  >
+                    2
+                  </div>
+                </div>
+                <div className="text-sm text-amber-400 font-serif mt-2">
+                  {currentStep === 1 && 'Step 1: Team & Event Selection'}
+                  {currentStep === 2 && 'Step 2: Participant Details'}
+                </div>
+              </div>
 
-            {/* Form Steps */}
-            {currentStep === 1 && renderStep1()}
-            {currentStep === 2 && renderStep2()}
-          </>
-        )}
+              {/* Form Steps */}
+              {currentStep === 1 && renderStep1()}
+              {currentStep === 2 && renderStep2()}
+            </>
+          )}
 
-        {/* Greek-inspired footer */}
-        <div className="flex justify-center mt-12 mb-6">
-          <div className="w-full max-w-2xl border-t border-amber-500 pt-4 flex items-center justify-center">
-            <p className="text-amber-300 text-sm font-serif">PRANAV2k25 Events • Inspired by the glory of Mount Olympus</p>
+          {/* Greek-inspired footer */}
+          <div className="flex justify-center mt-12 mb-6">
+            <div className="w-full max-w-2xl border-t border-amber-500 pt-4 flex items-center justify-center">
+              <p className="text-amber-300 text-sm font-serif">
+                PRANAV2k25 Events • Inspired by the glory of Mount Olympus
+              </p>
+            </div>
           </div>
         </div>
       </div>

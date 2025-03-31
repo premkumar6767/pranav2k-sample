@@ -1,399 +1,188 @@
-import React, { useRef, useMemo } from "react";
-import { motion, useInView } from "framer-motion";
-import "../index.css";
-import laurel from "./../images/laurelbg.png";
-import { 
-  Zap, 
-  Compass, 
-  BookOpen, 
-  Flame, 
-  Linkedin, 
-  Instagram,
-  Map, 
-  Globe,
-  Scroll
-} from "lucide-react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Cpu, Wifi, Zap } from "lucide-react";
+import Background1 from "../../public/Background1.jpg"; // Ensure correct path
+import HodImage from "../images/hod-ece.png"; // Update with your actual HOD image
+import "./About.css"; // Import external CSS for fire effects
 
-const About: React.FC = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { amount: 0.3 });
+interface AboutProps {
+  backgroundImage?: string;
+}
 
-  // Memoize features to prevent unnecessary re-renders
-  const features = useMemo(() => [
-    { 
-      icon: <Zap className="h-5 w-5 md:h-8 md:w-8 text-light-blue" />, 
-      image: "/images/profone.jpeg",  
-      deity: "Founder", 
-      title: "Prof.K.R.Sundararajan ", 
-      description: "Prof. K.R. Sundararajan founded IIET in 1947 to expand engineering education, later establishing Meenakshi College for Women in 1974. His vision led to the creation of Meenakshi Sundararajan Engineering College in 2001. His legacy continues to shape engineering education in South India."
+const About: React.FC<AboutProps> = ({ backgroundImage = Background1 }) => {
+  const eceHighlights = [
+    {
+      title: "Communication Systems",
+      description: "Cutting-edge research and training in wireless communications, signal processing, and network infrastructure development.",
+      icon: <Wifi className="w-10 h-10 text-blue-400" />,
     },
-    // Add more features here if needed
-  ], []);
+    {
+      title: "VLSI Design",
+      description: "Advanced integrated circuit design, semiconductor physics, and electronic system architecture for next-generation technology.",
+      icon: <Cpu className="w-10 h-10 text-green-400" />,
+    },
+    {
+      title: "Embedded Systems",
+      description: "Innovative approaches to IoT, real-time computing, microcontroller programming, and hardware-software integration.",
+      icon: <Zap className="w-10 h-10 text-yellow-400" />,
+    },
+  ];
 
-  // Optimize stagger and fade animations
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2 // Slightly reduced stagger for smoother animation
-      }
-    }
-  };
-
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.4, // Slightly reduced duration
-        ease: "easeOut"
-      }
-    }
+  const achievements = [
+    "Best Paper Award at IEEE International Conference 2024",
+    "₹50 Lakh research grant for IoT Innovation Lab",
+    "Industry partnership with leading semiconductor companies",
+    "100% placement record for the past three consecutive years"
+  ];
+  const handleCardClick = () => {
+    const navigate = useNavigate();
+    
+    // Navigate to the event detail page using the slug
+    navigate(`/event/technical`);
   };
 
   return (
     <section
-      id="about"
-      className="relative py-16 md:py-24 bg-cover bg-center text-white overflow-hidden"
-      style={{ backgroundImage: "url('/ancient-greek-bg.jpg')" }}
+      className="relative min-h-screen bg-gradient-to-br from-[#0f2027] to-[#203a43] text-white overflow-hidden"
+      style={{
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
     >
-      {/* Background and Particle Effects */}
-      <div className="absolute inset-0 bg-black/70">
-        {/* Animated cosmic background with increased visibility */}
-        <div className="absolute inset-0 opacity-50">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <radialGradient id="cosmos" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-                <stop offset="0%" stopColor="#4a148c" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#000000" stopOpacity="0" />
-              </radialGradient>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#cosmos)" />
-          </svg>
-        </div>
-        
-        {/* Greek column pattern overlay */}
-        <div className="absolute inset-0 opacity-30 bg-repeat" style={{ backgroundImage: "url('/greek-pattern.png')" }}></div>
-      </div>
-      
-      {/* Celestial particles background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Stars background */}
-        {[...Array(150)].map((_, i) => (
-          <motion.div
-            key={`star-${i}`}
-            className="absolute rounded-full z-10"
-            style={{ 
-              left: `${Math.random() * 100}%`, 
-              top: `${Math.random() * 100}%`,
-              width: `${Math.random() * 3 + 1}px`,
-              height: `${Math.random() * 3 + 1}px`,
-              backgroundColor: Math.random() > 0.3 ? '#FFD700' : '#FFFFFF',
-              boxShadow: Math.random() > 0.6 ? '0 0 4px 1px rgba(255, 215, 0, 0.8)' : 'none'
-            }}
-            animate={{
-              opacity: [0.4, Math.random() * 0.7 + 0.6, 0.4],
-              scale: [1, Math.random() * 0.6 + 1.2, 1]
-            }}
-            transition={{
-              duration: 1.5 + Math.random() * 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: Math.random() * 2
-            }}
-          />
-        ))}
-      </div>
+      {/* 🔥 Fire Sparks Layer */}
+      <div className="fire-sparks"></div>
 
-      <div className="relative container mx-auto px-4">
-        {/* Header Section */}
-        <div className="text-center mb-16 md:mb-20">
-          <motion.div
-            className="relative inline-block mb-6"
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            viewport={{ once: true }}
-          >
-            <img 
-              src={laurel}
-              alt="Greek Laurel" 
-              className="w-32 md:w-48 mx-auto opacity-80" 
-            />
-            <motion.h2
-              className="text-4xl md:text-6xl font-cinzel font-bold text-gold absolute inset-0 flex items-center justify-center"
-              initial={{ opacity: 0, y: -20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              viewport={{ once: true }}
-            >
-              Management
-            </motion.h2>
-          </motion.div>
-          
-          <motion.div
-            className="h-1 w-16 md:w-24 mx-auto bg-gold mb-6 md:mb-8"
-            initial={{ width: 0 }}
-            whileInView={{ width: "6rem" }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
-          ></motion.div>
-          
-          <motion.p
-            className="text-base md:text-lg max-w-3xl mx-auto text-gray-300"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
-          >
-            PRANAV2K25 blends Greek mythology with cutting-edge innovation. Like the phoenix that rises from its ashes, we aim to inspire a rebirth of ideas and transformation of knowledge.
-          </motion.p>
-        </div>
-
-        {/* Features Grid */}
+      {/* Content Container */}
+      <div className="relative container mx-auto px-4 py-16">
+        {/* Department Header */}
         <motion.div
-          ref={ref}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative"
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
         >
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              className="relative overflow-hidden group"
-              variants={fadeInUp}
-            >
-              <div className="bg-black/40 backdrop-blur-sm border border-gold/30 p-6 md:p-8 rounded-lg hover:border-gold transition-all duration-500 group-hover:bg-black/60 h-full flex flex-col">
-                <div className="mb-2 text-xs text-gold/80 font-cinzel tracking-wider">GUIDED BY {feature.deity}</div>
-                
-                <div className="relative mb-4 overflow-hidden rounded-lg border-2 border-gold/50 p-1 group-hover:border-gold transition-colors duration-500">
-                  <img 
-                    src={feature.image} 
-                    alt={feature.title} 
-                    className="w-full h-48 object-cover object-center transform group-hover:scale-110 transition-transform duration-700"
-                  />
-                </div>
-                
-                <div className="bg-gold/20 p-3 rounded-full w-fit mb-4 group-hover:bg-gold/40 transition-colors">
-                  {feature.icon}
-                </div>
-                
-                <h3 className="text-xl md:text-2xl font-cinzel font-bold mb-3 text-gold group-hover:text-light-blue transition-colors">
-                  {feature.title}
-                </h3>
-                
-                <p className="text-sm md:text-base text-gray-300 mt-auto">{feature.description}</p>
-              </div>
-            </motion.div>
-          ))}
+          <h1 className="glowing-title">Electronics & Communication Engineering</h1>
+          <p className="max-w-3xl mx-auto text-xl text-gray-300">
+            Pioneering the future of electronic systems and communication technologies through
+            innovation, research, and industry-aligned education.
+          </p>
         </motion.div>
 
+        {/* Department Head Card */}
         <motion.div
-          className="mt-16 md:mt-24 bg-black/40 backdrop-blur-sm border border-light-blue/20 p-8 md:p-10 rounded-lg relative overflow-hidden"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          viewport={{ once: true }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8 }}
+          className="max-w-2xl mx-auto mb-16 bg-gradient-to-br from-[#2c3e50]/80 to-[#34495e]/80 rounded-2xl border-2 border-white/20 p-8 flex flex-col md:flex-row items-center gap-8"
         >
-          {/* Greek pattern background */}
-          <div className="absolute inset-0 bg-repeat opacity-5" style={{ backgroundImage: "url('/greek-pattern-large.png')" }}></div>
-          
-          {/* Decorative Greek border */}
-          <div className="absolute top-0 left-0 right-0 h-4 bg-repeat-x opacity-60" style={{ backgroundImage: "url('/greek-border.png')" }}></div>
-          <div className="absolute bottom-0 left-0 right-0 h-4 bg-repeat-x opacity-60" style={{ backgroundImage: "url('/greek-border.png')" }}></div>
+          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-yellow-400/50">
+            <img
+              src={HodImage}
+              alt="HOD of ECE Department"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="text-center md:text-left">
+            <h3 className="text-2xl font-bold text-white">Dr. Sanjay Kumar</h3>
+            <div className="text-sm text-yellow-200 mb-3">Head of Department</div>
+            <p className="text-gray-200">
+              With over 15 years of research experience in VLSI design and communication systems,
+              Dr. Kumar leads the department's vision to create innovative engineers ready for the
+              technological challenges of tomorrow.
+            </p>
+          </div>
+        </motion.div>
 
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 mb-6 md:mb-0 md:pr-8 relative">
-              {/* Greek column decorative elements */}
-              <div className="absolute -left-4 top-0 bottom-0 w-2 bg-repeat-y opacity-30" style={{ backgroundImage: "url('/greek-column.png')" }}></div>
-              
-              <motion.h3 
-                className="text-2xl md:text-3xl font-cinzel font-bold mb-4 text-light-blue"
+        {/* ECE Specializations Grid */}
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
+          {eceHighlights.map((specialization, index) => (
+            <motion.div
+              key={specialization.title}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 0.6,
+                delay: index * 0.2,
+              }}
+              className="relative overflow-hidden rounded-2xl border-2 border-white/20 bg-gradient-to-br from-[#2c3e50]/70 to-[#34495e]/70 transform transition-all hover:scale-105 shadow-2xl p-6"
+            >
+              {/* Icon */}
+              <div className="bg-white/10 rounded-full w-20 h-20 flex items-center justify-center mb-4">
+                {specialization.icon}
+              </div>
+
+              {/* Details */}
+              <h3 className="text-2xl font-bold text-white mb-2">
+                {specialization.title}
+              </h3>
+              <p className="text-gray-200">{specialization.description}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Department Achievements */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="mb-16 bg-gradient-to-br from-[#2c3e50] to-[#34495e] rounded-3xl p-12"
+        >
+          <h2 className="text-3xl font-bold text-center mb-8 text-white">Department Achievements</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {achievements.map((achievement, index) => (
+              <motion.div
+                key={index}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="flex items-center space-x-4"
               >
-                Meenakshi Sundararajan <br />Engineering College
-              </motion.h3>
-              
-              <motion.div
-                className="h-1 w-16 bg-gold mb-6"
-                initial={{ width: 0 }}
-                whileInView={{ width: "4rem" }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                viewport={{ once: true }}
-              ></motion.div>
-              
-              <motion.p 
-                className="text-sm md:text-base text-gray-400"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                viewport={{ once: true }}
-              >
-                Meenakshi Sundararajan Engineering College (MSEC), established in 2001 in Chennai, is a private engineering college affiliated with Anna University, offering undergraduate and postgraduate programs in various engineering disciplines, aiming to produce industry-ready graduates.
-              </motion.p>
-              <div className="flex space-x-6 mt-6">
-                <motion.a
-                  href="https://www.linkedin.com/school/meenakshi-sundararajan-engineering-college/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gold hover:text-light-blue transition-colors relative group"
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Linkedin className="w-6 h-6" />
-                  <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">LinkedIn</span>
-                </motion.a>
-
-                <motion.a
-                  href="https://maps.app.goo.gl/yC6AZM3McGjN9uk98"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gold hover:text-light-blue transition-colors relative group"
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Map className="w-6 h-6" />
-                  <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Location</span>
-                </motion.a>
-                <motion.a
-                  href="https://www.instagram.com/msecofficial_chennai24?igsh=MTB0MTR3ZWp6MGNpaA=="
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gold hover:text-light-blue transition-colors relative group"
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Instagram className="w-6 h-6" />
-                  <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Instagram</span>
-                </motion.a>
-
-                <motion.a
-                  href="https://msec.edu.in/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gold hover:text-light-blue transition-colors relative group"
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Globe className="w-6 h-6" />
-                  <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Website</span>
-                </motion.a>
-              </div>
-            </div>
-
-            <div className="md:w-1/2 flex justify-center relative">
-              {/* Greek temple silhouette behind the flame */}
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-64 h-32 bg-contain bg-no-repeat bg-bottom opacity-30" style={{ backgroundImage: "url('/greek-temple.png')" }}></div>
-              
-              {/* Enhanced pulsating flame effect */}
-              <motion.div
-                animate={{ 
-                  y: [0, -15, 0], 
-                  rotateZ: [0, 5, 0, -5, 0] 
-                }}
-                transition={{ 
-                  duration: 5, 
-                  repeat: Infinity, 
-                  ease: "easeInOut" 
-                }}
-                className="relative"
-              >
-                {/* Enhanced flame glow effect */}
-                <motion.div
-                  className="absolute -inset-16 opacity-60"
-                  animate={{ 
-                    opacity: [0.6, 1, 0.6],
-                    scale: [0.8, 1.3, 0.8]
-                  }}
-                  transition={{ 
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                  style={{
-                    filter: "blur(20px)",
-                    background: "radial-gradient(circle, rgba(135,206,235,0.5) 0%, rgba(0,0,0,0) 70%)"
-                  }}
-                ></motion.div>
-                
-                <Flame className="h-32 w-32 md:h-48 md:w-48 text-light-blue" />
-                
-                <motion.div
-                  className="absolute inset-0"
-                  animate={{ 
-                    opacity: [0.5, 1, 0.5],
-                    scale: [0.9, 1.2, 0.9] 
-                  }}
-                  transition={{ 
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                >
-                  <Flame className="h-32 w-32 md:h-48 md:w-48 text-gold" />
-                </motion.div>
-                
-                {/* Enhanced sparks effect with more particles and faster movement */}
-                <div className="absolute inset-0 overflow-visible">
-                  {[...Array(40)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute rounded-full"
-                      style={{
-                        width: `${Math.random() * 5 + 2}px`,
-                        height: `${Math.random() * 5 + 2}px`,
-                        left: "50%",
-                        top: "50%",
-                        backgroundColor: i % 3 === 0 ? "#87CEEB" : "#FFD700",
-                        boxShadow: i % 3 === 0 
-                          ? "0 0 10px 2px rgba(135, 206, 235, 0.8)" 
-                          : "0 0 10px 2px rgba(255, 215, 0, 0.8)",
-                        zIndex: 20
-                      }}
-                      animate={{
-                        x: [0, (Math.random() - 0.5) * 200],
-                        y: [0, -100 - Math.random() * 200],
-                        opacity: [1, 0],
-                        scale: [1, Math.random() * 0.5 + 0.5]
-                      }}
-                      transition={{
-                        duration: 0.8 + Math.random() * 1.2,
-                        repeat: Infinity,
-                        delay: Math.random() * 2,
-                        ease: "easeOut"
-                      }}
-                    />
-                  ))}
+                <div className="flex-shrink-0 h-10 w-10 rounded-full bg-yellow-500 flex items-center justify-center text-white font-bold">
+                  {index + 1}
                 </div>
-                
-                {/* Enhanced flame base glow */}
-                <motion.div
-                  className="absolute top-1/2 left-1/2 w-24 h-24 md:w-32 md:h-32 rounded-full -z-10"
-                  style={{
-                    transform: "translate(-50%, -50%)",
-                    background: "radial-gradient(circle, rgba(255,215,0,0.6) 0%, rgba(0,0,0,0) 70%)",
-                    filter: "blur(8px)"
-                  }}
-                  animate={{
-                    opacity: [0.7, 1, 0.7],
-                    scale: [2, 2.5, 2]
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                ></motion.div>
+                <p className="text-gray-200">{achievement}</p>
               </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* PRANAV2K25 ECE Events */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="bg-gradient-to-br from-[#1a2238] to-[#0f1423] rounded-3xl p-12 text-center"
+        >
+          <h2 className="glowing-title">PRANAV2K25: ECE Edition</h2>
+          <p className="text-xl text-gray-300 mb-8">
+            Join us for specialized workshops, technical competitions, and industry talks focused on
+            the latest advancements in electronics and communication engineering.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white/5 p-6 rounded-xl border border-white/10">
+              <h3 className="text-yellow-300 text-xl font-bold mb-2">Circuit Design Challenge</h3>
+              <p className="text-gray-300">Design innovative electronic circuits to solve real-world problems</p>
+            </div>
+            <div className="bg-white/5 p-6 rounded-xl border border-white/10">
+              <h3 className="text-yellow-300 text-xl font-bold mb-2">IoT Hackathon</h3>
+              <p className="text-gray-300">Build connected solutions leveraging cutting-edge IoT technologies</p>
+            </div>
+            <div className="bg-white/5 p-6 rounded-xl border border-white/10">
+              <h3 className="text-yellow-300 text-xl font-bold mb-2">Tech Paper Presentation</h3>
+              <p className="text-gray-300">Present your research in communication systems and signal processing</p>
             </div>
           </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-4 px-12 rounded-full text-xl hover:shadow-2xl transition-all" 
+            onClick={() => handleCardClick()}
+          >
+            Register for ECE Events
+          </motion.button>
         </motion.div>
       </div>
     </section>

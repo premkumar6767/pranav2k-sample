@@ -134,4 +134,37 @@ body::before {
 .text-shadow-lg {
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
+/* Add these to your global CSS file */
+.responsive-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.responsive-content {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .music-dialog {
+    padding: 15px;
+  }
+  
+  .music-dialog-header h3 {
+    font-size: 1.5rem;
+  }
+  
+  .greek-ornament {
+    width: 60px;
+  }
+  
+  .music-buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .music-buttons button {
+    width: 100%;
+  }
+}
 

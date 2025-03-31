@@ -24,37 +24,37 @@ const events = {
       title: "Paper Presentation", 
       image: paperPresentation,
       description: "Present your innovative research papers and ideas in front of expert panels.", 
-      timing: "Day 1 - 10:00 AM to 1:00 PM", 
-      price: "₹300"
+      timing: "10:00 AM to 1:00 PM", 
+
     },
     { 
       title: "Wired Wonders", 
       image: wiredWonders,
       description: "Test your hardware and circuit design skills.", 
-      timing: "Day 2 - 10:00 AM to 12:00 PM", 
-      price: "₹250"
+      timing: "10:00 AM to 12:00 PM", 
+
     },
     { 
       title: "Halt the Dice", 
       image: roleAndDice,
       description: "Strategic problem-solving competition with a twist.", 
-      timing: "Day 2 - 2:00 PM to 4:00 PM", 
-      price: "₹200"
+      timing: "2:00 PM to 4:00 PM", 
+
     },
     
     { 
       title: "Design to Dev", 
       image: designedToDev,
       description: "Web and app development challenge.", 
-      timing: "Day 3 - 9:00 AM to 12:00 PM", 
-      price: "₹300"
+      timing: "9:00 AM to 12:00 PM", 
+
     },
     { 
       title: "DecodeX", 
       image: reverseCoding,
       description: "Decode and solve programming challenges backwards.", 
-      timing: "Day 3 - 2:00 PM to 4:00 PM", 
-      price: "₹250"
+      timing: "2:00 PM to 4:00 PM", 
+
     }
   ],
   nonTechnical: [
@@ -62,37 +62,37 @@ const events = {
       title: "Ojingeo Game", 
       image: ojingeoGame,
       description: "Strategic survival game inspired by popular series.", 
-      timing: "Day 1 - 11:00 AM to 1:00 PM", 
-      price: "₹200"
+      timing: "11:00 AM to 1:00 PM", 
+
     },
     { 
       title: "Anime Quiz", 
       image: animeQuiz,
       description: "Test your knowledge of anime and manga.", 
-      timing: "Day 1 - 3:00 PM to 5:00 PM", 
-      price: "₹150"
+      timing: "3:00 PM to 5:00 PM", 
+
     },
   
     { 
       title: "Aural Bliss", 
       image: auralBliss,
       description: "Music and sound recognition competition.", 
-      timing: "Day 2 - 2:00 PM to 4:00 PM", 
-      price: "₹150"
+      timing: "2:00 PM to 4:00 PM", 
+
     },
     { 
       title: "Treasure Hunt", 
       image: treasureHunt,
       description: "Campus-wide treasure hunt with cryptic clues.", 
-      timing: "Day 3 - 10:00 AM to 1:00 PM", 
-      price: "₹250"
+      timing: "10:00 AM to 1:00 PM", 
+
     },
     { 
       title: "Electro Field", 
       image: electroField,
       description: "Electronics-themed fun challenges.", 
-      timing: "Day 3 - 2:00 PM to 4:00 PM", 
-      price: "₹200"
+      timing: "2:00 PM to 4:00 PM", 
+
     }
   ],
   online: [
@@ -100,15 +100,15 @@ const events = {
       title: "Short Film", 
       image: shortFilm,
       description: "Create and submit your short films.", 
-      timing: "Submit by Day 1 - 5:00 PM", 
-      price: "₹300"
+      timing: "Submit by 5:00 PM", 
+
     },
     { 
       title: "E-Sports", 
       image: eSports,
       description: "Online gaming tournament.", 
-      timing: "Day 2 - Online", 
-      price: "₹200"
+      timing: "Online", 
+
     }
   ],
   workshop: [
@@ -116,8 +116,8 @@ const events = {
       title: "Drone Workshop", 
       image: droneWorkshop,
       description: "Learn about drone technology and applications.", 
-      timing: "Day 1 - Full Day", 
-      price: "₹1000"
+      timing: "Full Day", 
+
     }
   ]
 };
@@ -126,6 +126,7 @@ const events = {
 const categoryMap: { [key: string]: keyof typeof events } = {
   technical: "technical",
   "non-technical": "nonTechnical",
+  online: "online" ,
 };
 
 const EventCategory: React.FC = () => {
@@ -198,7 +199,7 @@ const EventCategory: React.FC = () => {
               <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/70 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6">
                 <h2 className="text-2xl font-bold text-white">{event.title}</h2>
                 <p className="text-gray-300 text-sm">{event.timing}</p>
-                <p className="text-yellow-400 font-bold">{event.price}</p>
+              
               </div>
             </motion.div>
           ))}

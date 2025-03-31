@@ -3,6 +3,13 @@ import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Flame, Mail, Phone, MapPin, Instagram, Twitter, Facebook, Linkedin } from 'lucide-react';
 
+// Custom CSS class for golden glow effect
+// You can add this to your global CSS file
+// .golden-glow {
+//   filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.6));
+//   color: #FFD700;
+// }
+
 const Footer: React.FC = () => {
   const location = useLocation();
   const currentYear = new Date().getFullYear();
@@ -18,7 +25,7 @@ const Footer: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Flame className="h-8 w-8 text-light-blue phoenix-glow" />
+              <Flame className="h-8 w-8 text-gold golden-glow" />
               <span className="text-gold font-cinzel text-2xl font-bold">PRANAV2K25</span>
             </motion.div>
             <motion.p 
@@ -35,17 +42,17 @@ const Footer: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <a href="#" className="text-gray-400 hover:text-light-blue transition-colors">
-                <Instagram className="h-5 w-5" />
+              <a href="#" className="text-gold hover:text-light-blue transition-colors">
+                <Instagram className="h-5 w-5 golden-glow" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-light-blue transition-colors">
-                <Twitter className="h-5 w-5" />
+              <a href="#" className="text-gold hover:text-light-blue transition-colors">
+                <Twitter className="h-5 w-5 golden-glow" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-light-blue transition-colors">
-                <Facebook className="h-5 w-5" />
+              <a href="#" className="text-gold hover:text-light-blue transition-colors">
+                <Facebook className="h-5 w-5 golden-glow" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-light-blue transition-colors">
-                <Linkedin className="h-5 w-5" />
+              <a href="#" className="text-gold hover:text-light-blue transition-colors">
+                <Linkedin className="h-5 w-5 golden-glow" />
               </a>
             </motion.div>
           </div>
@@ -69,7 +76,7 @@ const Footer: React.FC = () => {
               <li><a href="#about" className="text-gray-300 hover:text-light-blue transition-colors">About</a></li>
               <li><a href="#events" className="text-gray-300 hover:text-light-blue transition-colors">Events</a></li>
               <li><a href="#schedule" className="text-gray-300 hover:text-light-blue transition-colors">Schedule</a></li>
-              <li><a href="#speakers" className="text-gray-300 hover:text-light-blue transition-colors">Speakers</a></li>
+              <li><a href="#sponsors" className="text-gray-300 hover:text-light-blue transition-colors">Sponsors</a></li>
               <li><a href="#register" className="text-gray-300 hover:text-light-blue transition-colors">Register</a></li>
             </motion.ul>
           </div>
@@ -92,16 +99,16 @@ const Footer: React.FC = () => {
                 transition={{ duration: 0.5, delay: 0.6 }}
               >
                 <li className="flex items-start">
-                  <Mail className="h-5 w-5 text-light-blue mr-3 mt-0.5" />
-                  <span className="text-gray-300">info@pranav2k25.edu</span>
+                  <Mail className="h-5 w-5 text-gold golden-glow mr-3 mt-0.5" />
+                  <span className="text-gray-300">Msec123@gmail.com</span>
                 </li>
                 <li className="flex items-start">
-                  <Phone className="h-5 w-5 text-light-blue mr-3 mt-0.5" />
+                  <Phone className="h-5 w-5 text-gold golden-glow mr-3 mt-0.5" />
                   <span className="text-gray-300">+91 9876543210</span>
                 </li>
                 <li className="flex items-start">
-                  <MapPin className="h-5 w-5 text-light-blue mr-3 mt-0.5" />
-                  <span className="text-gray-300">Apollo Campus, Olympus Building, Tech Park, Bangalore</span>
+                  <MapPin className="h-5 w-5 text-gold golden-glow mr-3 mt-0.5" />
+                  <span className="text-gray-300">Meenakshi sundararajan engineering college , Kodambakkam , Chennai</span>
                 </li>
               </motion.ul>
             </div>
@@ -139,7 +146,7 @@ const Footer: React.FC = () => {
                 type="submit" 
                 className="bg-gold text-deep-blue px-4 py-2 rounded-r-md font-medium hover:bg-light-blue transition-colors"
               >
-                Subscribe
+                Share
               </button>
             </motion.form>
           </div>
@@ -151,7 +158,7 @@ const Footer: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 1 }}
         >
-          <p>© {currentYear} PRANAV2K25. All rights reserved. Designed with the wisdom of Athena and the creativity of Apollo.</p>
+          <p>© {currentYear} PRANAV2K25. All rights reserved. Designed with the wisdom of MSEC and the creativity of website team.</p>
         </motion.div>
       </div>
     </footer>

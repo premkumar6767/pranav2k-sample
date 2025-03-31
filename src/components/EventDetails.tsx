@@ -142,7 +142,7 @@ const events = {
       description:
         "Inspired by the viral Korean survival game, this event will push your strategic thinking and endurance to the limit.",
       timing: "Day 1 - 11:00 AM to 1:00 PM",
-      price: "₹200",
+      
       teamSize: 1 - 4,
       about:
         "This event is a survival-based challenge inspired by the famous Squid Game. Participants will compete in multiple rounds of physically and mentally challenging games. The last team standing wins the ultimate prize!",
@@ -163,7 +163,7 @@ const events = {
       description:
         "Test your anime and manga knowledge in this ultimate quiz showdown!",
       timing: "Day 1 - 3:00 PM to 5:00 PM",
-      price: "₹150",
+      
       teamSize: 1 - 2,
       about:
         "Are you an anime and manga expert? This quiz will challenge your knowledge across different anime genres, famous characters, theme songs, and classic storylines.",
@@ -184,7 +184,7 @@ const events = {
       description:
         "A music lover’s paradise! 'Aural Bliss' is an exhilarating competition that tests your auditory perception and musical knowledge.",
       timing: "Day 2 - 2:00 PM to 4:00 PM",
-      price: "₹150",
+      
       teamSize: 1 - 3,
       about:
         "This event is for all music enthusiasts who love identifying songs, artists, and lyrics. Contestants will go through multiple rounds of music-related challenges, testing their auditory skills and knowledge.",
@@ -205,7 +205,7 @@ const events = {
       description:
         "Solve cryptic clues and uncover hidden treasures across the campus. An adventurous race against time and opponents!",
       timing: "Day 3 - 10:00 AM to 1:00 PM",
-      price: "₹250",
+      
       teamSize: 3 - 5,
       about:
         "Teams will solve riddles and navigate through multiple checkpoints to uncover the hidden treasure. The fastest team to complete all challenges wins.",
@@ -228,7 +228,7 @@ const events = {
       description:
         "A series of fun and interactive electronic-themed challenges designed for tech enthusiasts.",
       timing: "Day 3 - 2:00 PM to 4:00 PM",
-      price: "₹200",
+      
       teamSize: 2 - 3,
       about:
         "This event is a hands-on electronics challenge where participants must complete tasks involving circuits, sensors, and basic robotics.",
@@ -251,7 +251,7 @@ const events = {
       description:
         "Unleash your creativity by making a compelling short film in just a few minutes. Show off your storytelling, directing, and editing skills!",
       timing: "Submit by Day 1 - 5:00 PM",
-      price: "₹300",
+      
       teamSize: 3 - 5,
       about:
         "Participants will create a short film based on a given theme within the specified time limit. The best films will be showcased at the closing ceremony.",
@@ -276,7 +276,7 @@ const events = {
       description:
         "Compete in an adrenaline-pumping online gaming tournament featuring some of the most popular multiplayer games!",
       timing: "Day 2 - Online",
-      price: "₹200",
+      
       teamSize: 2,
       about:
         "This high-intensity gaming competition brings together e-sports enthusiasts to battle it out in their favorite online multiplayer games. The tournament format will vary based on the selected games.",
@@ -300,7 +300,7 @@ const events = {
       description:
         "Learn the fundamentals of drone technology, including assembly, calibration, and flying techniques. A must-attend for drone enthusiasts!",
       timing: "Day 1 - Full Day",
-      price: "₹1000",
+      
       teamSize: 1,
       about:
         "A hands-on workshop covering drone aerodynamics, control systems, and live flying sessions. Participants will gain practical experience in drone assembly and operation.",
@@ -404,7 +404,6 @@ const EventDetail = () => {
         <p className="text-yellow-400 text-lg font-bold text-center">
           {event.timing}
         </p>
-        <p className="text-xl text-center font-bold mt-2">Fee: {event.price}</p>
 
         {/* Buttons for Registration & Sharing */}
         <div className="flex justify-center mt-6 gap-4">
